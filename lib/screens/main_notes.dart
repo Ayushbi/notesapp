@@ -39,6 +39,12 @@ class _Main_notesState extends State<Main_notes> {
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert),
             onSelected: (item) async {
+              if (item == 'New') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Note_editor()),
+                );
+              }
               if (item == 'Delete') {
                 await firebase.delete_all();
                 setState(() {
@@ -97,7 +103,6 @@ class _Main_notesState extends State<Main_notes> {
                   itemCount: notes.length,
                 ),
               ),
-
             ],
           ),
         ),
@@ -106,9 +111,7 @@ class _Main_notesState extends State<Main_notes> {
         onPressed: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => Note_editor(),
-            ),
+            MaterialPageRoute(builder: (context) => Note_editor()),
           );
         },
         child: Icon(Icons.add),

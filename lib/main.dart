@@ -37,6 +37,8 @@ class _NotesState extends State<Notes> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
+
       localizationsDelegates: FlutterQuillLocalizations.localizationsDelegates,
       debugShowCheckedModeBanner: false,
       home: Splashscreen()

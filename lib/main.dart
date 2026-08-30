@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:notes_app/screens/Login.dart';
+import 'package:notes_app/screens/SplashScreen.dart';
+
 import 'package:notes_app/screens/add_Notes.dart';
 import 'package:notes_app/screens/main_notes.dart';
 import 'package:notes_app/screens/setting.dart';
@@ -16,10 +19,10 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.requestPermission();
   String? token = await FirebaseMessaging.instance.getToken();
-
-  if (token != null) {
-    await firebase.SaveToken(token);
-  }
+  print("FCM Token: $token");
+  // if (token != null) {
+  //   await firebase.SaveToken(token);
+  // }
   runApp(const Notes());
 }
 
@@ -36,7 +39,7 @@ class _NotesState extends State<Notes> {
     return MaterialApp(
       localizationsDelegates: FlutterQuillLocalizations.localizationsDelegates,
       debugShowCheckedModeBanner: false,
-      home: Main_notes(),
+      home: Splashscreen()
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Get_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class firebase {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -14,7 +15,7 @@ class firebase {
         "title": heading,
         "data": data,
         "time": FieldValue.serverTimestamp(),
-        "user":"user1"
+        "user": "user1",
       });
 
       return true;
@@ -24,9 +25,10 @@ class firebase {
   }
 
   static Future<void> SaveToken(String token) async {
-    await db.collection("users").doc("user1").set
-      ({"fcmtoken": token},SetOptions(merge: true));
-
+    String uid=FirebaseAuth.instance.currentUser!.uid;
+    await db.collection("users").doc(uid).set({
+      "fcmtoken": token,
+    }, SetOptions(merge: true));
   }
 
   static Future<List<Note>> get() async {
@@ -76,4 +78,31 @@ class firebase {
       throw ("failed");
     }
   }
+
+  static Future<bool> Signup(String email, String password) async {
+    try {
+    var user= await FirebaseAuth.instance.createUserWithEmailAndPassword
+       (email: email, password: password);
+    String uid = user.user!.uid;
+    await db.collection("users").doc(uid).set({
+      "email": email,
+
+    });
+    return true;
+    } catch (e) {
+      throw ("Signup failed,$e");
+    }
+  }
+  static Future<bool> Login(String Email ,String pass)async{
+    try{
+     var user= await FirebaseAuth.instance.signInWithEmailAndPassword
+       (email: Email, password: pass);
+      return true;
+
+    }
+    catch(e){
+     throw("ERROR $e");
+    }
+  }
+
 }

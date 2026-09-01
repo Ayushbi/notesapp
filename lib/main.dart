@@ -1,11 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:notes_app/Provider/theme_provider.dart';
 import 'package:notes_app/screens/Login.dart';
 import 'package:notes_app/screens/SplashScreen.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_app/screens/add_Notes.dart';
 import 'package:notes_app/screens/main_notes.dart';
 import 'package:notes_app/screens/setting.dart';
@@ -23,25 +25,34 @@ Future<void> main() async {
   // if (token != null) {
   //   await firebase.SaveToken(token);
   // }
-  runApp(const Notes());
+  runApp(
+    ProviderScope(
+        child: const Notes()
+    )
+  );
 }
 
-class Notes extends StatefulWidget {
+class Notes extends ConsumerStatefulWidget {
   const Notes({super.key});
 
   @override
-  State<Notes> createState() => _NotesState();
+  ConsumerState<Notes> createState() => _NotesState();
 }
 
-class _NotesState extends State<Notes> {
+class _NotesState extends ConsumerState<Notes> {
+
   @override
   Widget build(BuildContext context) {
+    final isDark=ref.watch(Theme_setting);
     return MaterialApp(
-
-
       localizationsDelegates: FlutterQuillLocalizations.localizationsDelegates,
       debugShowCheckedModeBanner: false,
-      home: Splashscreen()
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: isDark
+            ? ThemeMode.dark
+            : ThemeMode.light,
+      home: Note_editor()
     );
   }
 }

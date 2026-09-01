@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/Provider/theme_provider.dart';
 import 'package:notes_app/screens/add_Notes.dart';
 import 'package:notes_app/screens/main_notes.dart';
-
-class setting extends StatefulWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+class setting extends ConsumerStatefulWidget{
   const setting({super.key});
 
   @override
-  State<setting> createState() => _settingState();
+  ConsumerState<setting> createState() => _settingState();
 }
 
-class _settingState extends State<setting> {
+class _settingState extends ConsumerState<setting> {
   bool isdark = false;
 
   @override
@@ -25,11 +26,9 @@ class _settingState extends State<setting> {
               leading: Icon(Icons.dark_mode),
               title: Text("Theme"),
               trailing: Switch(
-                value: isdark,
+                value:   ref.watch(Theme_setting),
                 onChanged: (value) {
-                  setState(() {
-                    isdark= value;
-                  });
+                  ref.read(Theme_setting.notifier).state = value;
                 },
               ),
             ),

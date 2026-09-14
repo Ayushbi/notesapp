@@ -96,6 +96,7 @@ class _SignupState extends State<Signup> {
 
                       TextFormField(
                         controller: pass,
+                        obscureText: true,
                         decoration: InputDecoration(
                           label: Text("Password"),
                           border: OutlineInputBorder(
@@ -113,6 +114,7 @@ class _SignupState extends State<Signup> {
                       SizedBox(height: 10),
 
                       TextFormField(
+                        obscureText: true,
                         decoration: InputDecoration(
                           label: Text("Confirm Password"),
                           border: OutlineInputBorder(

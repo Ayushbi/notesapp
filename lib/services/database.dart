@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class firebase {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
+  static final uid=FirebaseAuth.instance.currentUser!.uid;
 
   static Future<bool> Save(String heading, String data) async {
     try {
@@ -15,7 +16,7 @@ class firebase {
         "title": heading,
         "data": data,
         "time": FieldValue.serverTimestamp(),
-        "user": "user1",
+        "uid":uid,
       });
 
       return true;
@@ -32,13 +33,19 @@ class firebase {
   }
 
   static Future<List<Note>> get() async {
+
+
     var data = await db
         .collection("notes")
-        .orderBy("time", descending: true)
+        .where("uid", isEqualTo: uid)
         .get();
+
+
+
     List<Note> notes = data.docs.map((item) {
       return Note.database(item.data(), item.id);
     }).toList();
+
     return notes;
   }
 
@@ -75,22 +82,23 @@ class firebase {
       var data = await db.collection("notes").doc(id).get();
       return Note.database(data.data()!, data.id);
     } catch (e) {
-      throw ("failed");
+      throw ("failed",e);
     }
   }
 
   static Future<bool> Signup(String email, String password) async {
     try {
-    var user= await FirebaseAuth.instance.createUserWithEmailAndPassword
-       (email: email, password: password);
-    String uid = user.user!.uid;
-    await db.collection("users").doc(uid).set({
-      "email": email,
-
-    });
-    return true;
+      var user = await FirebaseAuth.instance.createUserWithEmailAndPassword
+        (email: email, password: password);
+      String uid = user.user!.uid;
+      await db.collection("users").doc(uid).set({
+        "uid": uid,
+      });
+      return true;
     } catch (e) {
-      throw ("Signup failed,$e");
+      print("Signup failed: $e");
+      throw ("Signup failed: $e");
+
     }
   }
   static Future<bool> Login(String Email ,String pass)async{

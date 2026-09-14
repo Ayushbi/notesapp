@@ -52,7 +52,7 @@ class _NotesState extends ConsumerState<Notes> {
         themeMode: isDark
             ? ThemeMode.dark
             : ThemeMode.light,
-      home: Note_editor()
+      home: Splashscreen()
     );
   }
 }

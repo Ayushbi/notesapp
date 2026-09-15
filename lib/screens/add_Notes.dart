@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_app/screens/Favourite.dart';
 import 'package:notes_app/screens/main_notes.dart';
 import 'package:notes_app/screens/setting.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -165,6 +166,12 @@ class _Note_editorState extends State<Note_editor> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Main_notes()),
+            );
+          }
+          if (item == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Favourite()),
             );
           }
           if (item == 2) {

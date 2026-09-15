@@ -116,4 +116,18 @@ class firebase {
      throw Exception("error :$e");
     }
   }
+  static Future<List<Note>> getFavourite() async {
+    var data = await db
+        .collection("notes")
+        .where("uid", isEqualTo: uid)
+        .where("favourite", isEqualTo: true)
+        .get();
+
+    List<Note> notes = data.docs.map((item) {
+      return Note.database(item.data(), item.id);
+    }).toList();
+
+    return notes;
+  }
 }
+

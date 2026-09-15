@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Get_model.dart';
+import 'package:notes_app/screens/Favourite.dart';
 import 'package:notes_app/screens/add_Notes.dart';
 import 'package:notes_app/screens/setting.dart';
 import 'package:notes_app/services/database.dart';
@@ -133,19 +134,17 @@ class _Main_notesState extends State<Main_notes> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (item) {
+          if(item==0){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context)=>Favourite()));
+          }
           if (item == 1) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => setting()),
             );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(item.toString()),
-                duration: Duration(seconds: 1),
-              ),
-            );
           }
+
         },
 
         items: [

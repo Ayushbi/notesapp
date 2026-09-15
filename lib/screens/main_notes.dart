@@ -17,7 +17,6 @@ class _Main_notesState extends State<Main_notes> {
   Future<void> load() async {
     try {
       notes = await firebase.get();
-      print("Total Notes = ${notes.length}");
       setState(() {});
     } catch (e) {
       print(e);
@@ -56,7 +55,7 @@ class _Main_notesState extends State<Main_notes> {
             itemBuilder: (context) => [
               const PopupMenuItem(child: Text("New note"), value: "New"),
               const PopupMenuItem(child: Text("Delete all"), value: "Delete"),
-              const PopupMenuItem(child: Text("Recent deleted"), value: "Bin"),
+
             ],
           ),
         ],
@@ -96,7 +95,23 @@ class _Main_notesState extends State<Main_notes> {
                             ),
                           );
                         },
-                        trailing: Icon(Icons.favorite),
+                        trailing:IconButton(
+                            onPressed: ()async{
+                          setState(() {
+                            notes[index].favourite = !notes[index].favourite;
+                          });
+                            try{
+                             await firebase.Favourite(notes[index].id, notes[index].favourite);
+                            }
+                            catch(e){
+                              ScaffoldMessenger.of(context).showSnackBar
+                                (SnackBar(content: Text("error $e")));
+                            }
+
+                        },
+                            icon: notes[index].favourite
+                                ?Icon(Icons.favorite,color: Colors.red,)
+                                :Icon(Icons.favorite_border))
                       ),
                     );
                   },

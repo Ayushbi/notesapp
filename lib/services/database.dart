@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class firebase {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
-  static final uid=FirebaseAuth.instance.currentUser!.uid;
+  static final uid = FirebaseAuth.instance.currentUser!.uid;
 
   static Future<bool> Save(String heading, String data) async {
     try {
@@ -16,7 +16,8 @@ class firebase {
         "title": heading,
         "data": data,
         "time": FieldValue.serverTimestamp(),
-        "uid":uid,
+        "uid": uid,
+        "favourite":false
       });
 
       return true;
@@ -26,21 +27,14 @@ class firebase {
   }
 
   static Future<void> SaveToken(String token) async {
-    String uid=FirebaseAuth.instance.currentUser!.uid;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
     await db.collection("users").doc(uid).set({
       "fcmtoken": token,
     }, SetOptions(merge: true));
   }
 
   static Future<List<Note>> get() async {
-
-
-    var data = await db
-        .collection("notes")
-        .where("uid", isEqualTo: uid)
-        .get();
-
-
+    var data = await db.collection("notes").where("uid", isEqualTo: uid).get();
 
     List<Note> notes = data.docs.map((item) {
       return Note.database(item.data(), item.id);
@@ -82,35 +76,44 @@ class firebase {
       var data = await db.collection("notes").doc(id).get();
       return Note.database(data.data()!, data.id);
     } catch (e) {
-      throw ("failed",e);
+      throw ("failed", e);
     }
   }
 
   static Future<bool> Signup(String email, String password) async {
     try {
-      var user = await FirebaseAuth.instance.createUserWithEmailAndPassword
-        (email: email, password: password);
+      var user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       String uid = user.user!.uid;
-      await db.collection("users").doc(uid).set({
-        "uid": uid,
-      });
+      await db.collection("users").doc(uid).set({"uid": uid});
       return true;
     } catch (e) {
       print("Signup failed: $e");
       throw ("Signup failed: $e");
-
     }
   }
-  static Future<bool> Login(String Email ,String pass)async{
-    try{
-     var user= await FirebaseAuth.instance.signInWithEmailAndPassword
-       (email: Email, password: pass);
-      return true;
 
+  static Future<bool> Login(String Email, String pass) async {
+    try {
+      var user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: Email,
+        password: pass,
+      );
+      return true;
+    } catch (e) {
+      throw ("ERROR $e");
+    }
+  }
+ static Future<void>Favourite(String id,bool favourite)async{
+    try{
+      db.collection("notes").doc(id).update({
+        "favourite": favourite,
+      });
     }
     catch(e){
-     throw("ERROR $e");
+     throw Exception("error :$e");
     }
   }
-
 }

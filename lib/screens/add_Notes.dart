@@ -160,36 +160,7 @@ class _Note_editorState extends State<Note_editor> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (item) {
-          if (item == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => Main_notes()),
-            );
-          }
-          if (item == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => Favourite()),
-            );
-          }
-          if (item == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => setting()),
-            );
-          }
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: "Favourite",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
-        ],
-      ),
+
     );
   }
 }

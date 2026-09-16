@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:notes_app/screens/HomeScreen.dart';
 import 'package:notes_app/screens/Login.dart';
 import 'package:notes_app/screens/main_notes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,19 +21,21 @@ class _SplashscreenState extends State<Splashscreen> {
 
   Future<void> navigate() async {
     final SharedPreferences token = await SharedPreferences.getInstance();
-    if (token.getBool("Login") == true) {
-      Timer(Duration(seconds: 2), () {
-        if (!mounted) return;
 
+    Timer(Duration(seconds: 2), () {
+      if (!mounted) return;
+      if (token.getBool("Login") == true) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Main_notes()),
+          MaterialPageRoute(builder: (context) => Homescreen()),
         );
-      });
-    }else{
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder:(context)=>Login() ));
-    }
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      }
+    });
   }
 
   Widget build(BuildContext context) {

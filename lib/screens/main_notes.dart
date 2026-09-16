@@ -132,29 +132,7 @@ class _Main_notesState extends State<Main_notes> {
         },
         child: Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (item) {
-          if(item==0){
-            Navigator.push(context, MaterialPageRoute(
-                builder: (context)=>Favourite()));
-          }
-          if (item == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => setting()),
-            );
-          }
 
-        },
-
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: "Favourite",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
-        ],
-      ),
     );
   }
 }

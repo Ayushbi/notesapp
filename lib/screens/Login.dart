@@ -4,7 +4,7 @@ import 'package:notes_app/screens/Signup.dart';
 import 'package:notes_app/screens/main_notes.dart';
 import 'package:notes_app/screens/setting.dart';
 import 'package:notes_app/services/database.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -105,6 +105,8 @@ class _LoginState extends State<Login> {
                       try{
                       var data= await firebase.Login(email.text, pass.text);
                       if(data==true){
+                      final  SharedPreferences token=await  SharedPreferences.getInstance();
+                         token.setBool("Login", true);
                         Navigator.pushReplacement(context, MaterialPageRoute
                           (builder: (context)=>Main_notes()));
                       }

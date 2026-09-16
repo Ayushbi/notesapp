@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/model/Get_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// Database class
 class firebase {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
   static final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -17,7 +18,7 @@ class firebase {
         "data": data,
         "time": FieldValue.serverTimestamp(),
         "uid": uid,
-        "favourite":false
+        "favourite": false,
       });
 
       return true;
@@ -26,12 +27,15 @@ class firebase {
     }
   }
 
+  // Notification
   static Future<void> SaveToken(String token) async {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     await db.collection("users").doc(uid).set({
       "fcmtoken": token,
     }, SetOptions(merge: true));
   }
+
+
 
   static Future<List<Note>> get() async {
     var data = await db.collection("notes").where("uid", isEqualTo: uid).get();
@@ -43,6 +47,7 @@ class firebase {
     return notes;
   }
 
+  // specific note deletion
   static Future<bool> delete(String id) async {
     try {
       await db.collection("notes").doc(id).delete();
@@ -59,6 +64,7 @@ class firebase {
     }
   }
 
+  //update
   static Future<bool> update(String id, String tittle, String data) async {
     try {
       await db.collection("notes").doc(id).update({
@@ -71,6 +77,7 @@ class firebase {
     }
   }
 
+  // details information of specific note
   static Future<Note> detail_data(String id) async {
     try {
       var data = await db.collection("notes").doc(id).get();
@@ -80,6 +87,7 @@ class firebase {
     }
   }
 
+  //register
   static Future<bool> Signup(String email, String password) async {
     try {
       var user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -95,6 +103,7 @@ class firebase {
     }
   }
 
+  //login
   static Future<bool> Login(String Email, String pass) async {
     try {
       var user = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -106,16 +115,17 @@ class firebase {
       throw ("ERROR $e");
     }
   }
- static Future<void>Favourite(String id,bool favourite)async{
-    try{
-      db.collection("notes").doc(id).update({
-        "favourite": favourite,
-      });
-    }
-    catch(e){
-     throw Exception("error :$e");
+
+  //Favourite button
+  static Future<void> Favourite(String id, bool favourite) async {
+    try {
+      db.collection("notes").doc(id).update({"favourite": favourite});
+    } catch (e) {
+      throw Exception("error :$e");
     }
   }
+
+  //favourite List of documents
   static Future<List<Note>> getFavourite() async {
     var data = await db
         .collection("notes")
@@ -130,4 +140,3 @@ class firebase {
     return notes;
   }
 }
-

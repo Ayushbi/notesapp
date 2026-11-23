@@ -34,6 +34,7 @@ class _Note_editorState extends State<Note_editor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: Text("Editor", style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
           PopupMenuButton(
@@ -71,24 +72,24 @@ class _Note_editorState extends State<Note_editor> {
 
                 if (data == true) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("deleted"),duration: Duration(seconds: 1),)
+                      SnackBar(content: Text("deleted"),
+                        duration: Duration(seconds: 1),)
                   );
                 }
-                Navigator.pushReplacement(context, MaterialPageRoute
-                  (builder: (context) => Main_notes()));
+               Navigator.pop(context);
               }
               if (item == "update") {
-              final data =await firebase.update(
-                  widget.index!.id,
-                  headingController.text,
-                  controller.document.toPlainText());
-              if(data==true){
-                ScaffoldMessenger.of(context).showSnackBar
-                  (SnackBar(content: Text("updated"),
-                  duration: Duration(seconds: 1),));
-                Navigator.pushReplacement(context, MaterialPageRoute
-                  (builder: (context)=>Main_notes()));
-              }
+                final data = await firebase.update(
+                    widget.index!.id,
+                    headingController.text,
+                    controller.document.toPlainText());
+                if (data == true) {
+                  ScaffoldMessenger.of(context).showSnackBar
+                    (SnackBar(content: Text("updated"),
+                    duration: Duration(seconds: 1),));
+                  Navigator.pushReplacement(context, MaterialPageRoute
+                    (builder: (context) => Main_notes()));
+                }
               }
             },
             itemBuilder: (context) =>

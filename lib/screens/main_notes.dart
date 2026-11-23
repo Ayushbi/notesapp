@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:notes_app/model/Get_model.dart';
 import 'package:notes_app/screens/Favourite.dart';
 import 'package:notes_app/screens/add_Notes.dart';
@@ -14,11 +15,15 @@ class Main_notes extends StatefulWidget {
 
 class _Main_notesState extends State<Main_notes> {
   List<Note> notes = [];
+  StreamSubscription<List<Note>>?subscription;
 
-  Future<void> load() async {
+  void load() {
     try {
-      notes = await firebase.get();
-      setState(() {});
+      subscription = firebase.get().listen((data) {
+        setState(() {
+          notes = data;
+        });
+      });
     } catch (e) {
       print(e);
     }
@@ -28,6 +33,11 @@ class _Main_notesState extends State<Main_notes> {
   void initState() {
     super.initState();
     load();
+  }
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -125,7 +135,7 @@ class _Main_notesState extends State<Main_notes> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => Note_editor()),
           );

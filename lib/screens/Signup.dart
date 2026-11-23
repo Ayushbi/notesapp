@@ -16,6 +16,7 @@ class _SignupState extends State<Signup> {
   TextEditingController email = TextEditingController();
   TextEditingController Confirm_email = TextEditingController();
   TextEditingController pass = TextEditingController();
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +107,8 @@ class _SignupState extends State<Signup> {
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Password required";
+                          } else if (value.length < 6) {
+                            return "minimum length is 6";
                           }
 
                           return null;
@@ -142,30 +145,42 @@ class _SignupState extends State<Signup> {
               child: Container(
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                    var result= await firebase.Signup
-                        (
-                          email.text.trim(),
-                          pass.text.trim()
-                      );
-                    if(result==true){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Signup Sucessfully"))
-                      );
-                      _formKey.currentState!.reset();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context)=>Login()));
-                    }
-
-                      }
-                      catch(e){
-                        print("error $e");
-                      }
-                    }
-                  },
-                  child: Text("Signup"),
+                  onPressed: loading
+                      ? null
+                      : () async {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              loading = true;
+                            });
+                            try {
+                              var result = await firebase.Signup(
+                                email.text.trim(),
+                                pass.text.trim(),
+                              );
+                              if (result == true) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Signup Sucessfully")),
+                                );
+                                _formKey.currentState!.reset();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Login(),
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              print("error $e");
+                            } finally {
+                              if (mounted) {
+                                setState(() {
+                                  loading = false;
+                                });
+                              }
+                            }
+                          }
+                        },
+                  child: loading ? CircularProgressIndicator() : Text("Signup"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade300,
                   ),

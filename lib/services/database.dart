@@ -36,15 +36,14 @@ class firebase {
   }
 
 
-
-  static Future<List<Note>> get() async {
-    var data = await db.collection("notes").where("uid", isEqualTo: uid).get();
-
-    List<Note> notes = data.docs.map((item) {
+  static Stream<List<Note>> get() {
+    return db
+        .collection("notes")
+        .where("uid", isEqualTo: uid)
+        .snapshots()
+        .map((data) => data.docs.map((item) {
       return Note.database(item.data(), item.id);
-    }).toList();
-
-    return notes;
+    }).toList());
   }
 
   // specific note deletion
